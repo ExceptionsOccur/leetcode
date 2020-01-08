@@ -41,7 +41,7 @@ using namespace std;
 //};
 
 
-// 首尾相接的小偷问题
+// 首尾相接的小偷问题，第一个元素和最后一个元素取一个，因此分别去掉，求两种情况下的最大值即可
 //class Solution {
 //public:
 //    int rob(vector<int>& nums) {
@@ -72,7 +72,7 @@ using namespace std;
 //    }
 //};
 
-// n个1加减运算为目标值的组合数问题
+// n个1加减运算为目标值的组合数问题，非leetcode题目，纯属是对原题目理解出现错误
 //class Solution {
 //public:
 //    int fact(int n) {
@@ -158,19 +158,65 @@ using namespace std;
 
 
 // 有条件满足即可，可以是取当前元素满足，亦可以是上一次取值满足，因此取或操作
+//class Solution {
+//public:
+//    bool canPartition(vector<int>& nums) {
+//        int sum = accumulate(nums.begin(), nums.end(), 0);
+//        if (sum % 2)   return false;
+//        int target = sum / 2;
+//        if (find(nums.begin(), nums.end(), target) != nums.end())  return true;
+//        vector<int> dp(target+1,0);
+//        dp[0] = 1;
+//        for (int i : nums) {
+//            for (int j = target; j > 0; j--) {
+//                if (j >= i)
+//                    dp[j] = dp[j] || dp[j - i];
+//            }
+//        }
+//        return dp[target];
+//    }
+//};
+
+
+// 整数拆分，求拆分后能得到的最大乘积
+// 完全背包问题思路，难点在于dp的取值，作为分解数时无法取到本身，因此不能作为递推项
+// n > 4 时，显然拆分后的最大积大于本身，n < 4 时本身大于拆分后的最大积，因此可以对小于4的情况特别处理
+// 本代码使用特别处理方式，注释两行为统一处理
+//class Solution {
+//public:
+//    int integerBreak(int n) {
+//        if (n < 4 && n >= 2) return n - 1;
+//        vector<int> dp(n + 1, 1);
+//        dp[0] = 0;
+//        dp[1] = 1;
+//        dp[2] = 2;
+//        dp[3] = 3;
+//        // dp[1] = 0;
+//        int k = 0;
+//        for (int i = 4; i <= n; i++) {
+//            for (int j = 1; j <= i; j++) {
+//                k = i - j;
+//                //dp[i] = max(dp[i], max(dp[j], j) * k);
+//                dp[i] = max(dp[i], dp[j] * k);
+//            }
+//        }
+//        return dp[n];
+//    }
+//};
+
+
+// 与部分和问题区别，部分和问题结果无排列，本题结果有排列，循环部分不同
+// 本题循环部分先取值再计数，不同取值顺序都可计算到，对比部分和问题的先取不同target值再取值，不区分排列
+// 另一难点为判断target值是否能由所有值不同组合计算得到(太难了，就不优化了，暴力算，用 unsigned long long防止溢出）
 class Solution {
 public:
-    bool canPartition(vector<int>& nums) {
-        int sum = accumulate(nums.begin(), nums.end(), 0);
-        if (sum % 2)   return false;
-        int target = sum / 2;
-        if (find(nums.begin(), nums.end(), target) != nums.end())  return true;
-        vector<int> dp(target+1,0);
+    unsigned long long combinationSum4(vector<int>& nums, int target) {
+        vector<unsigned long long> dp(target + 1, 0);
         dp[0] = 1;
-        for (int i : nums) {
-            for (int j = target; j > 0; j--) {
+        for (int j = 1; j <= target; j++) {
+            for (int i : nums) {
                 if (j >= i)
-                    dp[j] = dp[j] || dp[j - i];
+                    dp[j] = dp[j] + dp[j - i];
             }
         }
         return dp[target];
@@ -178,7 +224,7 @@ public:
 };
 
 int main() {
-    vector<int> data = { {1,2,5} };
+    vector<int> data = { {1,2,5}};
     Solution solution;
-    cout << solution.canPartition(data);
+    cout << solution.combinationSum4(data,6);
 }
