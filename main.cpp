@@ -7,7 +7,122 @@
 
 using namespace std;
 
+// 二维网格路径问题
+// leetcode 62
+//class Solution {
+//public:
+//    int uniquePaths(int m, int n) {
+//        if (m == 1 || n == 1) return 1;
+//        int dp[m][n];
+//        dp[0][0] = 1;
+//        for (int i = 1; i < m; i++) {
+//            dp[i][0] = 1;
+//        }
+//        for (int i = 1; i < n; i++) {
+//            dp[0][i] = 1;
+//        }
+//        for (int i = 1; i < m; i++) {
+//            for (int j = 1; j < n; j++) {
+//                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+//            }
+//        }
+//        return dp[m - 1][n - 1];
+//    }
+//};
+
+
+// 二维网格路径问题,带障碍物
+// leetcode 63
+//class Solution {
+//public:
+//    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+//        if (obstacleGrid[0][0] == 1) return 0;
+//        if (obstacleGrid.size() == 0) return 0;
+//        if (obstacleGrid.size() == 1) {
+//            int sum = 0;
+//            for (int i = 0; i < obstacleGrid[0].size(); i++) {
+//                sum = sum + obstacleGrid[0][i];
+//            }
+//            if (sum > 0) return 0;
+//            return 1;
+//        }
+//        if (obstacleGrid[0].size() == 1) {
+//            int sum = 0;
+//            for (int i = 0; i < obstacleGrid.size(); i++) {
+//                sum = sum + obstacleGrid[i][0];
+//            }
+//            if (sum > 0) return 0;
+//            return 1;
+//        }
+//        int m = obstacleGrid.size();
+//        int n = obstacleGrid[0].size();
+//        long dp[m][n];
+//        dp[0][0] = 1;
+//        for (int i = 1; i < m; i++) {
+//            if (obstacleGrid[i][0] == 0)  dp[i][0] = 1;
+//            else {
+//                for (int k = i; k < m; k++) {
+//                    dp[k][0] = 0;
+//                }
+//                break;
+//            }
+//        }
+//        for (int i = 1; i < n; i++) {
+//            if (obstacleGrid[0][i] == 0)  dp[0][i] = 1;
+//            else {
+//                for (int k = i; k < n; k++) {
+//                    dp[0][k] = 0;
+//                }
+//                break;
+//            }
+//        }
+//        for (int i = 1; i < m; i++) {
+//            for (int j = 1; j < n; j++) {
+//                if (obstacleGrid[i][j] == 1)
+//                    dp[i][j] = 0;
+//                else
+//                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+//            }
+//        }
+//        return dp[m - 1][n - 1];
+//    }
+//};
+
+// 二维网格路径问题,最小路径和
+// leetcode 64
+//class Solution {
+//public:
+//    int minPathSum(vector<vector<int>>& grid) {
+//        if (grid.size() == 0 || grid[0].size() == 0) return 0;
+//        if (grid.size() == 1) return accumulate(grid[0].begin(), grid[0].end(), 0);
+//        if (grid[0].size() == 1) {
+//            int sum = 0;
+//            for (int i = 0; i < grid.size(); i++) {
+//                sum = sum + grid[i][0];
+//            }
+//            return sum;
+//        }
+//        int m = grid.size();
+//        int n = grid[0].size();
+//        int dp[m][n];
+//        dp[0][0] = grid[0][0];
+//        for (int i = 1; i < m; i++) {
+//            dp[i][0] = grid[i][0] + dp[i - 1][0];
+//        }
+//        for (int i = 1; i < n; i++) {
+//            dp[0][i] = grid[0][i] + dp[0][i - 1];
+//        }
+//        for (int i = 1; i < m; i++) {
+//            for (int j = 1; j < n; j++) {
+//                dp[i][j] = grid[i][j] + min(dp[i - 1][j], dp[i][j - 1]);
+//            }
+//        }
+//        return dp[m - 1][n - 1];
+//    }
+//};
+
 // 三角形结构数组的最小路径和问题
+// leetcode 120
 //class Solution {
 //public:
 //    int minimumTotal(vector<vector<int>>& triangle) {
@@ -41,7 +156,8 @@ using namespace std;
 //};
 
 
-// 首尾相接的小偷问题，第一个元素和最后一个元素取一个，因此分别去掉，求两种情况下的最大值即可
+// 首尾相接的打家劫舍问题，第一个元素和最后一个元素取一个，因此分别去掉，求两种情况下的最大值即可
+// leetcode 213
 //class Solution {
 //public:
 //    int rob(vector<int>& nums) {
@@ -158,6 +274,7 @@ using namespace std;
 
 
 // 有条件满足即可，可以是取当前元素满足，亦可以是上一次取值满足，因此取或操作
+// leetcode 416
 //class Solution {
 //public:
 //    bool canPartition(vector<int>& nums) {
@@ -182,6 +299,7 @@ using namespace std;
 // 完全背包问题思路，难点在于dp的取值，作为分解数时无法取到本身，因此不能作为递推项
 // n > 4 时，显然拆分后的最大积大于本身，n < 4 时本身大于拆分后的最大积，因此可以对小于4的情况特别处理
 // 本代码使用特别处理方式，注释两行为统一处理
+// leetcode 343
 //class Solution {
 //public:
 //    int integerBreak(int n) {
@@ -208,6 +326,7 @@ using namespace std;
 // 与部分和问题区别，部分和问题结果无排列，本题结果有排列，循环部分不同
 // 本题循环部分先取值再计数，不同取值顺序都可计算到，对比部分和问题的先取不同target值再取值，不区分排列
 // 另一难点为判断target值是否能由所有值不同组合计算得到(太难了，就不优化了，暴力算，用 unsigned long long防止溢出）
+// leetcode 377
 class Solution {
 public:
     unsigned long long combinationSum4(vector<int>& nums, int target) {
