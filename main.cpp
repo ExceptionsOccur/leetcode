@@ -327,23 +327,79 @@ using namespace std;
 // 本题循环部分先取值再计数，不同取值顺序都可计算到，对比部分和问题的先取不同target值再取值，不区分排列
 // 另一难点为判断target值是否能由所有值不同组合计算得到(太难了，就不优化了，暴力算，用 unsigned long long防止溢出）
 // leetcode 377
+//class Solution {
+//public:
+//    unsigned long long combinationSum4(vector<int>& nums, int target) {
+//        vector<unsigned long long> dp(target + 1, 0);
+//        dp[0] = 1;
+//        for (int j = 1; j <= target; j++) {
+//            for (int i : nums) {
+//                if (j >= i)
+//                    dp[j] = dp[j] + dp[j - i];
+//            }
+//        }
+//        return dp[target];
+//    }
+//};
+
+
+// 中规中矩的动态规划，这里使用自顶向下，非最优时间
+//class Solution {
+//public:
+//
+//    int min_in_three(int a, int b, int c) {
+//        int min = 0;
+//        min = a < b ? a : b;
+//        min = min < c ? min : c;
+//        return min;
+//    }
+//    int minFallingPathSum(vector<vector<int>>& A) {
+//        if (A.size() == 0 || A[0].size() == 0)   return 0;
+//        int size = A.size();
+//        int min_ = INT_MAX;
+//        vector<vector<int>> dp(size, A[0]);
+//        for (int i = 1; i < size; i++) {
+//            for (int j = 0; j < size; j++) {
+//                if (j == 0)
+//                    dp[i][j] = min(A[i][j] + dp[i - 1][j], A[i][j] + dp[i - 1][j + 1]);
+//                else if (j == size - 1)
+//                    dp[i][j] = min(A[i][j] + dp[i - 1][j], A[i][j] + dp[i - 1][j - 1]);
+//                else
+//                    dp[i][j] = min_in_three(A[i][j] + dp[i - 1][j - 1], A[i][j] + dp[i - 1][j], A[i][j] + dp[i - 1][j + 1]);
+//            }
+//        }
+//        for (int r : dp[size - 1]) {
+//            min_ = min(min_, r);
+//        }
+//        return min_;
+//    }
+//};
+
+
+
 class Solution {
 public:
-    unsigned long long combinationSum4(vector<int>& nums, int target) {
-        vector<unsigned long long> dp(target + 1, 0);
-        dp[0] = 1;
-        for (int j = 1; j <= target; j++) {
-            for (int i : nums) {
-                if (j >= i)
-                    dp[j] = dp[j] + dp[j - i];
+    int numRollsToTarget(int d, int f, int target) {
+        vector<unsigned long long> temp(target + 1, 0);
+        vector<vector<unsigned long long>> dp(d + 1, temp);
+        for (int i = 1; i <= min(f, target); i++)
+            dp[1][i] = 1;
+        if (d == 1 && target <= f)   return  1;
+        if (d == 1 && target > f)  return 0;
+        for (int i = d; i <= target; i++) {
+            for (int j = 2; j <= d; j++) {
+                for (int k = 1; k <= f; k++) {
+                    if (i > k)
+                        dp[j][i] = dp[j][i] + dp[j - 1][i - k];
+                }
             }
         }
-        return dp[target];
+        return dp[d][target] % 1000000007;
     }
 };
 
 int main() {
-    vector<int> data = { {1,2,5}};
+    vector<vector<int>> data = { {1,2,3}, {4,5,6}, {7,8,9} };
     Solution solution;
-    cout << solution.combinationSum4(data,6);
+    cout << solution.numRollsToTarget(30,30,200);
 }
