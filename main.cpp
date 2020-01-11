@@ -376,7 +376,7 @@ using namespace std;
 //};
 
 
-
+// 骰子同时扔，以dp[i][j]表示i个骰子扔出和为j的组合数，显然，dp[i][j] = dp[i-1][j-1] + dp[i-1][j-2] +...+ dp[i-1][j-f]
 class Solution {
 public:
     int numRollsToTarget(int d, int f, int target) {
@@ -386,20 +386,22 @@ public:
             dp[1][i] = 1;
         if (d == 1 && target <= f)   return  1;
         if (d == 1 && target > f)  return 0;
-        for (int i = d; i <= target; i++) {
+        for (int i = 1; i <= target; i++) {
             for (int j = 2; j <= d; j++) {
                 for (int k = 1; k <= f; k++) {
                     if (i > k)
-                        dp[j][i] = dp[j][i] + dp[j - 1][i - k];
+                        dp[j][i] = (dp[j][i] + dp[j - 1][i - k]) % 1000000007;
                 }
             }
         }
-        return dp[d][target] % 1000000007;
+        // return dp[d][target] % 1000000007;   // 会溢出导致结果错误
+        // 1E9+7 与 1E+9 都为质数，结果过大时一般都使用 mod 的结果，对质数求 mod，减少碰撞且相加不溢出int，相乘不溢出 unsigned long long
+        return dp[d][target];
     }
 };
 
 int main() {
     vector<vector<int>> data = { {1,2,3}, {4,5,6}, {7,8,9} };
     Solution solution;
-    cout << solution.numRollsToTarget(30,30,200);
+    cout << solution.numRollsToTarget(5,6,10);
 }
