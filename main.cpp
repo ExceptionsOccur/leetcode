@@ -423,23 +423,52 @@ using namespace std;
 // 当所有组合都无法凑出目标值，结果不变，仍然为初始化时的值；当数组存在1，则有可能使得最终结果为目标值本身，因此必须将结果数组
 // 初始化为比目标值大的值，这样在结果返回时更好处理
 // leetcode 322
+//class Solution {
+//public:
+//    int coinChange(vector<int>& coins, int amount) {
+//        vector<int> dp(amount + 1, amount + 1);
+//        dp[0] = 0;
+//        for (int i = 1; i <= amount; i++) {
+//            for (int j : coins) {
+//                if (i >= j)
+//                    dp[i] = min(dp[i], dp[i - j] + 1);
+//            }
+//        }
+//        return (dp[amount] > amount) ? -1 : dp[amount];
+//    }
+//};
+
+
+// leetcode 576 
+// 状态转移方程不难列出来，[x,y]的点可以移动到[x-1,y],[x,y-1],[x+1,y],[x,y+1]，移动后剩余移动步数减一
+// 设dp[x,y,s]表示[x,y]的点移动s步可能产生的出界路径数，则dp[x,y,s] = [x-1,y,s-1] + [x,y-1,s-1] + [x+1,y,s-1] + [x,y+1,s-1]
+// 这里使用加两行(0行、m+2行)、两列(0列、m+2列)作为出界判定，这部分初始化为1，其他为0
+// vs使用的编译器数组不能参数初始化，太不方便了
+
 class Solution {
 public:
-    int coinChange(vector<int>& coins, int amount) {
-        vector<int> dp(amount + 1, amount + 1);
-        dp[0] = 0;
-        for (int i = 1; i <= amount; i++) {
-            for (int j : coins) {
-                if (i >= j)
-                    dp[i] = min(dp[i], dp[i - j] + 1);
-            }
-        }
-        return (dp[amount] > amount) ? -1 : dp[amount];
+    int findPaths(int m, int n, int N, int i, int j) {
+        int x = i + 1, y = j + 1, M = m + 2, n_ = n + 2;
+        vector<unsigned long long> temp(N + 1, 0);
+        vector<vector<unsigned long long>> temp_(n_, temp);
+        vector<vector<vector<unsigned long long>>> dp(M, temp_);
+        for (int a = 0; a < M; a++)
+            for (int b = 0; b < n_; b++)
+                for (int c = 0; c < N + 1; c++)
+                    if (a == 0 || a == (m + 1) || b == 0 || (b == n + 1))
+                        dp[a][b][c] = 1;
+
+        for (int c = 1; c <= N; c++)
+            for (int a = 1; a <= m; a++)
+                for (int b = 1; b <= n; b++)
+                    dp[a][b][c] = (dp[a - 1][b][c - 1] + dp[a][b - 1][c - 1] + dp[a + 1][b][c - 1] + dp[a][b + 1][c - 1]) % 1000000007;
+
+        return dp[x][y][N];
     }
 };
 
 int main() {
     vector<int> data = { {2,22}};
     Solution solution;
-    cout << solution.coinChange(data,3);
+    cout << solution.findPaths(2,2,2,0,0);
 }
