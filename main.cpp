@@ -445,30 +445,47 @@ using namespace std;
 // 这里使用加两行(0行、m+2行)、两列(0列、m+2列)作为出界判定，这部分初始化为1，其他为0
 // vs使用的编译器数组不能参数初始化，太不方便了
 
+//class Solution {
+//public:
+//    int findPaths(int m, int n, int N, int i, int j) {
+//        int x = i + 1, y = j + 1, M = m + 2, n_ = n + 2;
+//        vector<unsigned long long> temp(N + 1, 0);
+//        vector<vector<unsigned long long>> temp_(n_, temp);
+//        vector<vector<vector<unsigned long long>>> dp(M, temp_);
+//        for (int a = 0; a < M; a++)
+//            for (int b = 0; b < n_; b++)
+//                for (int c = 0; c < N + 1; c++)
+//                    if (a == 0 || a == (m + 1) || b == 0 || (b == n + 1))
+//                        dp[a][b][c] = 1;
+//
+//        for (int c = 1; c <= N; c++)
+//            for (int a = 1; a <= m; a++)
+//                for (int b = 1; b <= n; b++)
+//                    dp[a][b][c] = (dp[a - 1][b][c - 1] + dp[a][b - 1][c - 1] + dp[a + 1][b][c - 1] + dp[a][b + 1][c - 1]) % 1000000007;
+//
+//        return dp[x][y][N];
+//    }
+//};
+
+
+// leetcode 338 天秀！
+// 以二进制来讲，右移一位后1的位数与原来的数至多只有一位的差别，原来的数最右位是否为1
+// 可以得到状态转换方程 dp[n] = dp[n >> 1] + (n & 1)
+
 class Solution {
 public:
-    int findPaths(int m, int n, int N, int i, int j) {
-        int x = i + 1, y = j + 1, M = m + 2, n_ = n + 2;
-        vector<unsigned long long> temp(N + 1, 0);
-        vector<vector<unsigned long long>> temp_(n_, temp);
-        vector<vector<vector<unsigned long long>>> dp(M, temp_);
-        for (int a = 0; a < M; a++)
-            for (int b = 0; b < n_; b++)
-                for (int c = 0; c < N + 1; c++)
-                    if (a == 0 || a == (m + 1) || b == 0 || (b == n + 1))
-                        dp[a][b][c] = 1;
-
-        for (int c = 1; c <= N; c++)
-            for (int a = 1; a <= m; a++)
-                for (int b = 1; b <= n; b++)
-                    dp[a][b][c] = (dp[a - 1][b][c - 1] + dp[a][b - 1][c - 1] + dp[a + 1][b][c - 1] + dp[a][b + 1][c - 1]) % 1000000007;
-
-        return dp[x][y][N];
+    vector<int> countBits(int num) {
+        vector<int> dp(num + 1, 0);
+        for (int i = 0; i <= num; i++)
+            dp[i] = dp[i >> 1] + (i & 1);
+        return dp;
     }
 };
+
+
 
 int main() {
     vector<int> data = { {2,22}};
     Solution solution;
-    cout << solution.findPaths(2,2,2,0,0);
+    cout << solution.countBits(5);
 }
