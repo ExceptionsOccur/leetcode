@@ -404,22 +404,42 @@ using namespace std;
 // 完全背包问题变形，若m = n + k*k，则d[m] = d[n] + 1；即有状态转移方程d[m] = d[m - k * k] + 1;
 // 由1，2，3等无法分解为例，平方数最多时为全部取1，所以初始化时初始化为大于等于本身的值
 // leetcode 279
+//class Solution {
+//public:
+//    int numSquares(int n) {
+//        vector<int> dp(n + 1, n);
+//        dp[0] = 0;
+//        for (int i = 1; i <= n; i++) {
+//            for (int j = 1; j * j <= i; j++) {
+//                dp[i] = min(dp[i], dp[i - j * j] + 1);
+//            }  
+//        }
+//        return dp[n];
+//    }
+//};
+
+
+// 与 leetcode 279 类似，关键在判断所给的数组所有元素组合是否能凑出目标值，这里将初始值初始化为比目标值大的数
+// 当所有组合都无法凑出目标值，结果不变，仍然为初始化时的值；当数组存在1，则有可能使得最终结果为目标值本身，因此必须将结果数组
+// 初始化为比目标值大的值，这样在结果返回时更好处理
+// leetcode 322
 class Solution {
 public:
-    int numSquares(int n) {
-        vector<int> dp(n + 1, n);
+    int coinChange(vector<int>& coins, int amount) {
+        vector<int> dp(amount + 1, amount + 1);
         dp[0] = 0;
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j * j <= i; j++) {
-                dp[i] = min(dp[i], dp[i - j * j] + 1);
-            }  
+        for (int i = 1; i <= amount; i++) {
+            for (int j : coins) {
+                if (i >= j)
+                    dp[i] = min(dp[i], dp[i - j] + 1);
+            }
         }
-        return dp[n];
+        return (dp[amount] > amount) ? -1 : dp[amount];
     }
 };
 
 int main() {
-    vector<vector<int>> data = { {1,2,3}, {4,5,6}, {7,8,9} };
+    vector<int> data = { {2,22}};
     Solution solution;
-    cout << solution.numSquares(8);
+    cout << solution.coinChange(data,3);
 }
