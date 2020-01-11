@@ -377,31 +377,49 @@ using namespace std;
 
 
 // 骰子同时扔，以dp[i][j]表示i个骰子扔出和为j的组合数，显然，dp[i][j] = dp[i-1][j-1] + dp[i-1][j-2] +...+ dp[i-1][j-f]
+//class Solution {
+//public:
+//    int numRollsToTarget(int d, int f, int target) {
+//        vector<unsigned long long> temp(target + 1, 0);
+//        vector<vector<unsigned long long>> dp(d + 1, temp);
+//        for (int i = 1; i <= min(f, target); i++)
+//            dp[1][i] = 1;
+//        if (d == 1 && target <= f)   return  1;
+//        if (d == 1 && target > f)  return 0;
+//        for (int i = 1; i <= target; i++) {
+//            for (int j = 2; j <= d; j++) {
+//                for (int k = 1; k <= f; k++) {
+//                    if (i > k)
+//                        dp[j][i] = (dp[j][i] + dp[j - 1][i - k]) % 1000000007;
+//                }
+//            }
+//        }
+//        // return dp[d][target] % 1000000007;   // 会溢出导致结果错误
+//        // 1E9+7 与 1E+9 都为质数，结果过大时一般都使用 mod 的结果，对质数求 mod，减少碰撞且相加不溢出int，相乘不溢出 unsigned long long
+//        return dp[d][target];
+//    }
+//};
+
+
+// 完全背包问题变形，若m = n + k*k，则d[m] = d[n] + 1；即有状态转移方程d[m] = d[m - k * k] + 1;
+// 由1，2，3等无法分解为例，平方数最多时为全部取1，所以初始化时初始化为大于等于本身的值
+// leetcode 279
 class Solution {
 public:
-    int numRollsToTarget(int d, int f, int target) {
-        vector<unsigned long long> temp(target + 1, 0);
-        vector<vector<unsigned long long>> dp(d + 1, temp);
-        for (int i = 1; i <= min(f, target); i++)
-            dp[1][i] = 1;
-        if (d == 1 && target <= f)   return  1;
-        if (d == 1 && target > f)  return 0;
-        for (int i = 1; i <= target; i++) {
-            for (int j = 2; j <= d; j++) {
-                for (int k = 1; k <= f; k++) {
-                    if (i > k)
-                        dp[j][i] = (dp[j][i] + dp[j - 1][i - k]) % 1000000007;
-                }
-            }
+    int numSquares(int n) {
+        vector<int> dp(n + 1, n);
+        dp[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j * j <= i; j++) {
+                dp[i] = min(dp[i], dp[i - j * j] + 1);
+            }  
         }
-        // return dp[d][target] % 1000000007;   // 会溢出导致结果错误
-        // 1E9+7 与 1E+9 都为质数，结果过大时一般都使用 mod 的结果，对质数求 mod，减少碰撞且相加不溢出int，相乘不溢出 unsigned long long
-        return dp[d][target];
+        return dp[n];
     }
 };
 
 int main() {
     vector<vector<int>> data = { {1,2,3}, {4,5,6}, {7,8,9} };
     Solution solution;
-    cout << solution.numRollsToTarget(5,6,10);
+    cout << solution.numSquares(8);
 }
