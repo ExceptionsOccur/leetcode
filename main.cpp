@@ -344,6 +344,7 @@ using namespace std;
 
 
 // 中规中矩的动态规划，这里使用自顶向下，非最优时间
+// leetcode 931
 //class Solution {
 //public:
 //
@@ -376,30 +377,48 @@ using namespace std;
 //};
 
 
+// leetcode 1155
+//class Solution {
+//public:
+//    int numRollsToTarget(int d, int f, int target) {
+//        vector<unsigned long long> temp(target + 1, 0);
+//        vector<vector<unsigned long long>> dp(d + 1, temp);
+//        for (int i = 1; i <= min(f, target); i++)
+//            dp[1][i] = 1;
+//        if (d == 1 && target <= f)   return  1;
+//        if (d == 1 && target > f)  return 0;
+//        for (int i = d; i <= target; i++) {
+//            for (int j = 2; j <= d; j++) {
+//                for (int k = 1; k <= f; k++) {
+//                    if (i > k)
+//                        dp[j][i] = dp[j][i] + dp[j - 1][i - k];
+//                }
+//            }
+//        }
+//        return dp[d][target] % 1000000007;
+//    }
+//};
 
+// leetcode 16.11 跳水板
 class Solution {
 public:
-    int numRollsToTarget(int d, int f, int target) {
-        vector<unsigned long long> temp(target + 1, 0);
-        vector<vector<unsigned long long>> dp(d + 1, temp);
-        for (int i = 1; i <= min(f, target); i++)
-            dp[1][i] = 1;
-        if (d == 1 && target <= f)   return  1;
-        if (d == 1 && target > f)  return 0;
-        for (int i = d; i <= target; i++) {
-            for (int j = 2; j <= d; j++) {
-                for (int k = 1; k <= f; k++) {
-                    if (i > k)
-                        dp[j][i] = dp[j][i] + dp[j - 1][i - k];
-                }
-            }
+    vector<int> divingBoard(int shorter, int longer, int k) {
+        vector<int> result;
+        if (k == 0)
+            return result;
+        if (shorter == longer) {
+            result.push_back(shorter);
+            return result;
         }
-        return dp[d][target] % 1000000007;
+        for (size_t i = shorter * k; i <= longer * k; i += (longer - shorter)){
+            result.push_back(i);
+        }
+        return result;
     }
 };
 
 int main() {
-    vector<vector<int>> data = { {1,2,3}, {4,5,6}, {7,8,9} };
+    vector<int> data = {};
     Solution solution;
-    cout << solution.numRollsToTarget(30,30,200);
+    data = solution.divingBoard(1,2,3);
 }
