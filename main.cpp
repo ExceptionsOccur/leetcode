@@ -4,6 +4,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <numeric>
+#include <random>
 
 using namespace std;
 
@@ -505,30 +506,52 @@ using namespace std;
 
 
 // leetcode 16.05 阶乘末尾0个数，只需要求所有乘数中5的因子数量，如25为2个，125为3个
+//class Solution {
+//public:
+//    int trailingZeroes(int n) {
+//        if (n < 5)   return 0;
+//        int sum = 0;
+//        int k = n / 5, c = 0;
+//        for (int i = 1; i <= k; i++) {
+//            if (i % 5 == 0) {
+//                c = i;
+//                while (c % 5 == 0) {
+//                    c = c / 5;
+//                    sum += 1;
+//                }
+//                sum += 1;
+//            }
+//            else
+//                sum += 1;
+//        }
+//        return sum;
+//    }
+//};
+
+// leetcode 470 拒绝采样
 class Solution {
 public:
-    int trailingZeroes(int n) {
-        if (n < 5)   return 0;
-        int sum = 0;
-        int k = n / 5, c = 0;
-        for (int i = 1; i <= k; i++) {
-            if (i % 5 == 0) {
-                c = i;
-                while (c % 5 == 0) {
-                    c = c / 5;
-                    sum += 1;
-                }
-                sum += 1;
-            }
-            else
-                sum += 1;
-        }
-        return sum;
+    // leetcode 本身提供rand7()，这里自己实现
+    int rand7() {
+        return 1 + rand() % 7;
+    }
+
+    int rand10() {
+        int m = 0, n = 0, result = 0;
+        do {
+            m = rand7();
+            n = rand7();
+            // 此处若使用 m*n ，在[1,m*n]范围内取值概率不均匀，且无法取到质数，映射无效
+            // 使用(n - 1) * 7在[1,m*n]范围均匀随机取0、7、14、21、28、35、42
+            // 再加上[1，7]范围内均匀随机生成的 m，即可以实现在[1,49]范围取得均匀随机数
+            result = (n - 1) * 7 + m;
+        } while (result > 40);
+        return (result - 1) % 10 + 1;
     }
 };
 
 int main() {
     //vector<int> data = {};
     Solution solution;
-    cout << solution.trailingZeroes(3);
+    cout << solution.rand10();
 }
