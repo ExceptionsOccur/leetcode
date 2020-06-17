@@ -344,6 +344,7 @@ using namespace std;
 
 
 // 中规中矩的动态规划，这里使用自顶向下，非最优时间
+// leetcode 931
 //class Solution {
 //public:
 //
@@ -377,6 +378,7 @@ using namespace std;
 
 
 // 骰子同时扔，以dp[i][j]表示i个骰子扔出和为j的组合数，显然，dp[i][j] = dp[i-1][j-1] + dp[i-1][j-2] +...+ dp[i-1][j-f]
+// leetcode 1155
 //class Solution {
 //public:
 //    int numRollsToTarget(int d, int f, int target) {
@@ -472,20 +474,39 @@ using namespace std;
 // 以二进制来讲，右移一位后1的位数与原来的数至多只有一位的差别，原来的数最右位是否为1
 // 可以得到状态转换方程 dp[n] = dp[n >> 1] + (n & 1)
 
+//class Solution {
+//public:
+//    vector<int> countBits(int num) {
+//        vector<int> dp(num + 1, 0);
+//        for (int i = 0; i <= num; i++)
+//            dp[i] = dp[i >> 1] + (i & 1);
+//        return dp;
+//    }
+//};
+
+// leetcode 16.11
 class Solution {
 public:
-    vector<int> countBits(int num) {
-        vector<int> dp(num + 1, 0);
-        for (int i = 0; i <= num; i++)
-            dp[i] = dp[i >> 1] + (i & 1);
-        return dp;
+    vector<int> result;
+    int max = INT_MIN;
+    vector<int> divingBoard(int shorter, int longer, int k) {
+        vector<int> result;
+        if (k == 0)
+            return result;
+        if (shorter == longer) {
+            result.push_back(shorter * k);
+            return result;
+        }
+        for (size_t i = shorter * k; i <= longer * k; i += (longer - shorter)) {
+            result.push_back(i);
+        }
+        return result;
     }
 };
 
 
-
 int main() {
-    vector<int> data = { {2,22}};
+    vector<int> data = {};
     Solution solution;
-    cout << solution.countBits(5);
+    data = solution.divingBoard(1, 2, 3);
 }
