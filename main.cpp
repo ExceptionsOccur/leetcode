@@ -377,6 +377,114 @@ using namespace std;
 //};
 
 
+// 骰子同时扔，以dp[i][j]表示i个骰子扔出和为j的组合数，显然，dp[i][j] = dp[i-1][j-1] + dp[i-1][j-2] +...+ dp[i-1][j-f]
+//class Solution {
+//public:
+//    int numRollsToTarget(int d, int f, int target) {
+//        vector<unsigned long long> temp(target + 1, 0);
+//        vector<vector<unsigned long long>> dp(d + 1, temp);
+//        for (int i = 1; i <= min(f, target); i++)
+//            dp[1][i] = 1;
+//        if (d == 1 && target <= f)   return  1;
+//        if (d == 1 && target > f)  return 0;
+//        for (int i = 1; i <= target; i++) {
+//            for (int j = 2; j <= d; j++) {
+//                for (int k = 1; k <= f; k++) {
+//                    if (i > k)
+//                        dp[j][i] = (dp[j][i] + dp[j - 1][i - k]) % 1000000007;
+//                }
+//            }
+//        }
+//        // return dp[d][target] % 1000000007;   // 会溢出导致结果错误
+//        // 1E9+7 与 1E+9 都为质数，结果过大时一般都使用 mod 的结果，对质数求 mod，减少碰撞且相加不溢出int，相乘不溢出 unsigned long long
+//        return dp[d][target];
+//    }
+//};
+
+
+// 完全背包问题变形，若m = n + k*k，则d[m] = d[n] + 1；即有状态转移方程d[m] = d[m - k * k] + 1;
+// 由1，2，3等无法分解为例，平方数最多时为全部取1，所以初始化时初始化为大于等于本身的值
+// leetcode 279
+//class Solution {
+//public:
+//    int numSquares(int n) {
+//        vector<int> dp(n + 1, n);
+//        dp[0] = 0;
+//        for (int i = 1; i <= n; i++) {
+//            for (int j = 1; j * j <= i; j++) {
+//                dp[i] = min(dp[i], dp[i - j * j] + 1);
+//            }  
+//        }
+//        return dp[n];
+//    }
+//};
+
+
+// 与 leetcode 279 类似，关键在判断所给的数组所有元素组合是否能凑出目标值，这里将初始值初始化为比目标值大的数
+// 当所有组合都无法凑出目标值，结果不变，仍然为初始化时的值；当数组存在1，则有可能使得最终结果为目标值本身，因此必须将结果数组
+// 初始化为比目标值大的值，这样在结果返回时更好处理
+// leetcode 322
+//class Solution {
+//public:
+//    int coinChange(vector<int>& coins, int amount) {
+//        vector<int> dp(amount + 1, amount + 1);
+//        dp[0] = 0;
+//        for (int i = 1; i <= amount; i++) {
+//            for (int j : coins) {
+//                if (i >= j)
+//                    dp[i] = min(dp[i], dp[i - j] + 1);
+//            }
+//        }
+//        return (dp[amount] > amount) ? -1 : dp[amount];
+//    }
+//};
+
+
+// leetcode 576 
+// 状态转移方程不难列出来，[x,y]的点可以移动到[x-1,y],[x,y-1],[x+1,y],[x,y+1]，移动后剩余移动步数减一
+// 设dp[x,y,s]表示[x,y]的点移动s步可能产生的出界路径数，则dp[x,y,s] = [x-1,y,s-1] + [x,y-1,s-1] + [x+1,y,s-1] + [x,y+1,s-1]
+// 这里使用加两行(0行、m+2行)、两列(0列、m+2列)作为出界判定，这部分初始化为1，其他为0
+// vs使用的编译器数组不能参数初始化，太不方便了
+
+//class Solution {
+//public:
+//    int findPaths(int m, int n, int N, int i, int j) {
+//        int x = i + 1, y = j + 1, M = m + 2, n_ = n + 2;
+//        vector<unsigned long long> temp(N + 1, 0);
+//        vector<vector<unsigned long long>> temp_(n_, temp);
+//        vector<vector<vector<unsigned long long>>> dp(M, temp_);
+//        for (int a = 0; a < M; a++)
+//            for (int b = 0; b < n_; b++)
+//                for (int c = 0; c < N + 1; c++)
+//                    if (a == 0 || a == (m + 1) || b == 0 || (b == n + 1))
+//                        dp[a][b][c] = 1;
+//
+//        for (int c = 1; c <= N; c++)
+//            for (int a = 1; a <= m; a++)
+//                for (int b = 1; b <= n; b++)
+//                    dp[a][b][c] = (dp[a - 1][b][c - 1] + dp[a][b - 1][c - 1] + dp[a + 1][b][c - 1] + dp[a][b + 1][c - 1]) % 1000000007;
+//
+//        return dp[x][y][N];
+//    }
+//};
+
+
+// leetcode 338 天秀！
+// 以二进制来讲，右移一位后1的位数与原来的数至多只有一位的差别，原来的数最右位是否为1
+// 可以得到状态转换方程 dp[n] = dp[n >> 1] + (n & 1)
+
+//class Solution {
+//public:
+//    vector<int> countBits(int num) {
+//        vector<int> dp(num + 1, 0);
+//        for (int i = 0; i <= num; i++)
+//            dp[i] = dp[i >> 1] + (i & 1);
+//        return dp;
+//    }
+//};
+
+
+
 // leetcode 1155
 //class Solution {
 //public:
@@ -410,7 +518,7 @@ public:
             result.push_back(shorter);
             return result;
         }
-        for (size_t i = shorter * k; i <= longer * k; i += (longer - shorter)){
+        for (size_t i = shorter * k; i <= longer * k; i += (longer - shorter)) {
             result.push_back(i);
         }
         return result;
@@ -420,5 +528,5 @@ public:
 int main() {
     vector<int> data = {};
     Solution solution;
-    data = solution.divingBoard(1,2,3);
+    data = solution.divingBoard(1, 2, 3);
 }
