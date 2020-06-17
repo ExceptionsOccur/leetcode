@@ -484,29 +484,51 @@ using namespace std;
 //    }
 //};
 
-// leetcode 16.11
+// leetcode 16.11 k个数，只有shorter和longer两个值，求所有可能和，由小到大排列
+//class Solution {
+//public:
+//    vector<int> result;
+//    vector<int> divingBoard(int shorter, int longer, int k) {
+//        vector<int> result;
+//        if (k == 0)
+//            return result;
+//        if (shorter == longer) {
+//            result.push_back(shorter * k);
+//            return result;
+//        }
+//        for (size_t i = shorter * k; i <= longer * k; i += (longer - shorter)) {
+//            result.push_back(i);
+//        }
+//        return result;
+//    }
+//};
+
+
+// leetcode 16.05 阶乘末尾0个数，只需要求所有乘数中5的因子数量，如25为2个，125为3个
 class Solution {
 public:
-    vector<int> result;
-    int max = INT_MIN;
-    vector<int> divingBoard(int shorter, int longer, int k) {
-        vector<int> result;
-        if (k == 0)
-            return result;
-        if (shorter == longer) {
-            result.push_back(shorter * k);
-            return result;
+    int trailingZeroes(int n) {
+        if (n < 5)   return 0;
+        int sum = 0;
+        int k = n / 5, c = 0;
+        for (int i = 1; i <= k; i++) {
+            if (i % 5 == 0) {
+                c = i;
+                while (c % 5 == 0) {
+                    c = c / 5;
+                    sum += 1;
+                }
+                sum += 1;
+            }
+            else
+                sum += 1;
         }
-        for (size_t i = shorter * k; i <= longer * k; i += (longer - shorter)) {
-            result.push_back(i);
-        }
-        return result;
+        return sum;
     }
 };
 
-
 int main() {
-    vector<int> data = {};
+    //vector<int> data = {};
     Solution solution;
-    data = solution.divingBoard(1, 2, 3);
+    cout << solution.trailingZeroes(3);
 }
