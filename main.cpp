@@ -529,29 +529,92 @@ using namespace std;
 //};
 
 // leetcode 470 拒绝采样
+//class Solution {
+//public:
+//    // leetcode 本身提供rand7()，这里自己实现
+//    int rand7() {
+//        return 1 + rand() % 7;
+//    }
+//
+//    int rand10() {
+//        int m = 0, n = 0, result = 0;
+//        do {
+//            m = rand7();
+//            n = rand7();
+//            // 此处若使用 m*n ，在[1,m*n]范围内取值概率不均匀，且无法取到质数，映射无效
+//            // 使用(n - 1) * 7在[1,m*n]范围均匀随机取0、7、14、21、28、35、42
+//            // 再加上[1，7]范围内均匀随机生成的 m，即可以实现在[1,49]范围取得均匀随机数
+//            result = (n - 1) * 7 + m;
+//        } while (result > 40);
+//        return (result - 1) % 10 + 1;
+//    }
+//};
+
+// leetcode 292, 两人拿石块游戏，拿到最后一块胜利，判断是否可以胜利
+//class Solution {
+//public:
+//    bool canWinNim(int n) {
+//        if (n != 0 && n % 4 == 0)
+//            return false;
+//        return true;
+//    }
+//};
+
+// leetcode 1137, 三递归会超时，使用动态规划思想，使用循环
+//class Solution {
+//public:
+//    int tribonacci(int n) {
+//        // if(n == 0){
+//        //     return 0;
+//        // }
+//        // if(n == 1 || n == 2){
+//        //     return  1;
+//        // }
+//        // return tribonacci(n - 1) + tribonacci(n - 2) + tribonacci(n - 3);
+//        vector<int> result(40, 0);
+//        result[0] = 0;
+//        result[1] = 1;
+//        result[2] = 1;
+//        if (n < 3)   return result[n];
+//        for (int i = 3; i <= n; i++) {
+//            result[i] = result[i - 1] + result[i - 2] + result[i - 3];
+//        }
+//        return result[n];
+//    }
+//};
+
+// leetcode面试题10-I Fibonacci数列
+//class Solution {
+//public:
+//    int fib(int n) {
+//        vector<int> result(128, 0);
+//        result[0] = 0;
+//        result[1] = 1;
+//        if (n < 2)   return result[n];
+//        for (int i = 2; i <= n; i++) {
+//            result[i] = (result[i - 1] + result[i - 2]) % 1000000007;
+//        }
+//        return result[n];
+//    }
+//};
+
+// leetcode 面试题08.05
 class Solution {
 public:
-    // leetcode 本身提供rand7()，这里自己实现
-    int rand7() {
-        return 1 + rand() % 7;
-    }
-
-    int rand10() {
-        int m = 0, n = 0, result = 0;
-        do {
-            m = rand7();
-            n = rand7();
-            // 此处若使用 m*n ，在[1,m*n]范围内取值概率不均匀，且无法取到质数，映射无效
-            // 使用(n - 1) * 7在[1,m*n]范围均匀随机取0、7、14、21、28、35、42
-            // 再加上[1，7]范围内均匀随机生成的 m，即可以实现在[1,49]范围取得均匀随机数
-            result = (n - 1) * 7 + m;
-        } while (result > 40);
-        return (result - 1) % 10 + 1;
+    int multiply(int A, int B) {
+        // 指数加速
+        // A*B=(A*2)*(B/2)=(A*2)*(floor(B/2) + 2)=(A*2)*floor(B/2)+A*(B%2)
+        if (B == 1)  return A;
+        if (B == 0)  return 0;
+        if (B & 1)
+            return multiply(A << 1, B >> 1) + A;
+        else
+            return multiply(A << 1, B >> 1);
     }
 };
 
 int main() {
     //vector<int> data = {};
     Solution solution;
-    cout << solution.rand10();
+    cout << solution.multiply(20,5);
 }
