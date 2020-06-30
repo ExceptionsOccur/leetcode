@@ -599,22 +599,58 @@ using namespace std;
 //};
 
 // leetcode 面试题08.05
+//class Solution {
+//public:
+//    int multiply(int A, int B) {
+//        // 指数加速
+//        // A*B=(A*2)*(B/2)=(A*2)*(floor(B/2) + 2)=(A*2)*floor(B/2)+A*(B%2)
+//        if (B == 1)  return A;
+//        if (B == 0)  return 0;
+//        if (B & 1)
+//            return multiply(A << 1, B >> 1) + A;
+//        else
+//            return multiply(A << 1, B >> 1);
+//    }
+//};
+
+// leetcode 1313
+//class Solution {
+//public:
+//    vector<int> decompressRLElist(vector<int>& nums) {
+//        vector<int> r;
+//        for (int i = 1; i <= nums.size() / 2; i++) {
+//            vector<int> temp(nums[2 * (i - 1)], nums[2 * (i - 1) + 1]);
+//            r.insert(r.end(), temp.begin(), temp.end());
+//        }
+//        return r;
+//    }
+//};
+
+// leetcode 260 只出现一次的数字
+// 本题主要思想为分组，将只出现一次的两个数字分别分到两个组中做异或操作，变成 leetcode 136 题
 class Solution {
 public:
-    int multiply(int A, int B) {
-        // 指数加速
-        // A*B=(A*2)*(B/2)=(A*2)*(floor(B/2) + 2)=(A*2)*floor(B/2)+A*(B%2)
-        if (B == 1)  return A;
-        if (B == 0)  return 0;
-        if (B & 1)
-            return multiply(A << 1, B >> 1) + A;
-        else
-            return multiply(A << 1, B >> 1);
+    vector<int> singleNumber(vector<int>& nums) {
+        vector<int> result(2, 0);
+        int s(0);
+        int div(0);
+        for (int num : nums) {
+            s ^= num;
+        }
+        div = s & (-s);
+        for (int num : nums) {
+            if (num & div) {
+                result[0] ^= num;
+            }
+            else
+                result[1] ^= num;
+        }
+        return result;
     }
 };
 
 int main() {
-    //vector<int> data = {};
+    vector<int> data = { 1, 2, 1, 3, 2, 5 };
     Solution solution;
-    cout << solution.multiply(20,5);
+    cout << solution.singleNumber(data)[0] << ' ' << solution.singleNumber(data)[1];
 }
