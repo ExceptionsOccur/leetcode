@@ -505,7 +505,7 @@ using namespace std;
 //};
 
 
-// leetcode 16.05 阶乘末尾0个数，只需要求所有乘数中5的因子数量，如25为2个，125为3个
+// leetcode 172 阶乘末尾0个数，只需要求所有乘数中5的因子数量，如25为2个，125为3个
 //class Solution {
 //public:
 //    int trailingZeroes(int n) {
@@ -525,6 +525,13 @@ using namespace std;
 //                sum += 1;
 //        }
 //        return sum;
+//    }
+//};
+//class Solution {
+//public:
+//    int trailingZeroes(int n) {
+//        if (n < 5)   return 0;
+//        return n / 5 + trailingZeroes(n / 5);
 //    }
 //};
 
