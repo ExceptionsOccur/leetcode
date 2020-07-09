@@ -635,29 +635,101 @@ using namespace std;
 
 // leetcode 260 只出现一次的数字
 // 本题主要思想为分组，将只出现一次的两个数字分别分到两个组中做异或操作，变成 leetcode 136 题
+//class Solution {
+//public:
+//    vector<int> singleNumber(vector<int>& nums) {
+//        vector<int> result(2, 0);
+//        int s(0);
+//        int div(0);
+//        for (int num : nums) {
+//            s ^= num;
+//        }
+//        div = s & (-s);
+//        for (int num : nums) {
+//            if (num & div) {
+//                result[0] ^= num;
+//            }
+//            else
+//                result[1] ^= num;
+//        }
+//        return result;
+//    }
+//};
+
+// leetcode 112
+//class Solution {
+//public:
+// 
+//    struct TreeNode {
+//    int val;
+//    TreeNode *left;
+//    TreeNode *right;
+//    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+//    };
+//
+//    bool hasPathSum(TreeNode* root, int sum) {
+//        if (root == NULL)    return false;
+//        if (root->left == NULL && root->right == NULL)    return sum == root->val;
+//        return hasPathSum(root->left, sum - root->val) || hasPathSum(root->right, sum - root->val);
+//    }
+//};
+
+// leetcode 17.04
+//class Solution {
+//public:
+//    int missingNumber(vector<int>& nums) {
+//        int sum = accumulate(nums.begin(), nums.end(), 0);
+//        int max = *max_element(nums.begin(), nums.end());
+//        if (nums.size() == max + 1 || max == 0)  return max + 1;
+//        return (1 + max) * max / 2 - sum == 0 ? 0 : (1 + max) * max / 2 - sum;
+//    }
+//};
+
+// leetcode 1502
+//class Solution {
+//public:
+//    bool canMakeArithmeticProgression(vector<int>& arr) {
+//        if (arr.size() == 2) return true;
+//        sort(arr.begin(), arr.end());
+//        int diff = arr[1] - arr[0];
+//        for (int i = 2; i < arr.size(); i++) {
+//            if (arr[i] - arr[i - 1] != diff)
+//                return false;
+//        }
+//        return true;
+//    }
+//};
+
+// leetcode 16.07
 class Solution {
 public:
-    vector<int> singleNumber(vector<int>& nums) {
-        vector<int> result(2, 0);
-        int s(0);
-        int div(0);
-        for (int num : nums) {
-            s ^= num;
+    int maximum(int a, int b) {
+        // gnu/clang 编译器
+        //int x = a ^ b;
+        //int bit = 0;
+        //__asm__(
+        //    "bsr %1, %0"
+        //    : "=r" (bit)
+        //    : "r" (x)
+        //);
+        //int num = 1 << bit;
+        //return num & (1 << 31) ? (a & (1 << 31) ? b : a) : (a & num ? a : b);
+
+        // vs
+        int x = a ^ b;
+        int bit = 0;
+        __asm {
+            mov eax, x
+            bsr ebx, eax
+            mov bit, ebx
         }
-        div = s & (-s);
-        for (int num : nums) {
-            if (num & div) {
-                result[0] ^= num;
-            }
-            else
-                result[1] ^= num;
-        }
-        return result;
+        int num = 1 << bit;
+        return num & (1 << 31) ? (a & (1 << 31) ? b : a) : (a & num ? a : b);
     }
 };
 
 int main() {
-    vector<int> data = { 1, 2, 1, 3, 2, 5 };
+    //vector<int> data = {3,5};
     Solution solution;
-    cout << solution.singleNumber(data)[0] << ' ' << solution.singleNumber(data)[1];
+    cout << solution.maximum(-2147483648, 2147483647);
 }
