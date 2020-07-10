@@ -701,35 +701,65 @@ using namespace std;
 //};
 
 // leetcode 16.07
+//class Solution {
+//public:
+//    int maximum(int a, int b) {
+//        // gnu/clang ±àÒëÆ÷
+//        //int x = a ^ b;
+//        //int bit = 0;
+//        //__asm__(
+//        //    "bsr %1, %0"
+//        //    : "=r" (bit)
+//        //    : "r" (x)
+//        //);
+//        //int num = 1 << bit;
+//        //return num & (1 << 31) ? (a & (1 << 31) ? b : a) : (a & num ? a : b);
+//
+//        // vs
+//        int x = a ^ b;
+//        int bit = 0;
+//        __asm {
+//            mov eax, x
+//            bsr ebx, eax
+//            mov bit, ebx
+//        }
+//        int num = 1 << bit;
+//        return num & (1 << 31) ? (a & (1 << 31) ? b : a) : (a & num ? a : b);
+//    }
+//};
+
+// leetcode 342
+//class Solution {
+//public:
+//    bool isPowerOfFour(int num) {
+//        if ((num & 0x80000000) == 0x80000000)    return false;
+//        if ((num & (num - 1)) == 0 && num) {
+//            while (num > 2) {
+//                num >>= 2;
+//            }
+//            return num == 2 ? false : true;
+//        }
+//        return false;
+//    }
+//};
+
+// leetcode 633
 class Solution {
 public:
-    int maximum(int a, int b) {
-        // gnu/clang ±àÒëÆ÷
-        //int x = a ^ b;
-        //int bit = 0;
-        //__asm__(
-        //    "bsr %1, %0"
-        //    : "=r" (bit)
-        //    : "r" (x)
-        //);
-        //int num = 1 << bit;
-        //return num & (1 << 31) ? (a & (1 << 31) ? b : a) : (a & num ? a : b);
-
-        // vs
-        int x = a ^ b;
-        int bit = 0;
-        __asm {
-            mov eax, x
-            bsr ebx, eax
-            mov bit, ebx
+    bool judgeSquareSum(int c) {
+        int half = int(sqrt(c));
+        for (unsigned int i = 0, j = half; i <= j;) {
+            unsigned int sum = i * i + j * j;
+            if (sum == c) return true;
+            if (sum > c) j--;
+            if (sum < c) i++;
         }
-        int num = 1 << bit;
-        return num & (1 << 31) ? (a & (1 << 31) ? b : a) : (a & num ? a : b);
+        return false;
     }
 };
 
 int main() {
     //vector<int> data = {3,5};
     Solution solution;
-    cout << solution.maximum(-2147483648, 2147483647);
+    cout << solution.judgeSquareSum(2147482647);
 }
